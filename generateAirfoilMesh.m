@@ -4,6 +4,10 @@
 
 %GRID PARAMETERS
 L = 0.1; %Length of computational domain (m) 
+FineGrid = 1024; %Number of points on finest grid
+ds = L/(FineGrid*2); %Distance between grid points on finest grid
+d = L/20; %Diameter of tube
+
 N = 512; %Number of Cartesian grid meshwidths (finest)
 dx = L/N; %Cartesian mesh width (m)
 
@@ -18,7 +22,7 @@ third = 1;
 fourth = 2;
 thirdFourth = 12; %last two digits
 
-c = 0.1; %chord length
+c = 0.03; %chord length
 
 ds = c/(N/2); %spatial step for lagrangian points
 stepsOverChord = c/ds; %number of steps over chord length
@@ -130,19 +134,24 @@ kappa_target = 1.0e-2; %target point penalty spring constant (Newton)
 %WRITE .VERTEX FILE
 vertex_fid = fopen(['naca2D_' num2str(N) '.vertex'], 'w');
 
+numberNodes = (2*(ceil(c/ds)));
+
 %first line is the number of vertices in the file
-fprintf(vertex_fid, '%d\n', 511);
+fprintf(vertex_fid, '%d\n', numberNodes);
 hold on
 %remaining lines are the initial coordinates of each vertex
 
+initialX = 0;
+
 %WRITE VERTICES FOR UPPER SURFACE
-for i = 1:stepsOverChord
-    %determine x and y coordinates of point along upper surface
+for i = 0:(c/ds)
+    %determine x and y coordinates of point along lower surface
     
     in = i*ds; %position along the x axis
     
+    
     %HALF THICKNESS OF AIRFOIL AT GIVEN POSITION ON CHORD
-    yT = 5*t*c*((0.2969*sqrt(in/c))+(-0.1260*(in/c))+(-0.3516*(in/c)^2)+(0.2843*(in/c)^3)+(-0.1015*(in/c)^4));
+    yT = 5*t*c*((0.2969*sqrt(in/c))+(-0.1260*(in/c))+(-0.3516*(in/c)^2)+(0.2843*(in/c)^3)+(-0.1036*(in/c)^4));
     
     %MEAN CAMBER LINE    
     if in <= p*c %calculating for a cambered 4-digit naca airfoil (see wikipedia page)
@@ -162,24 +171,25 @@ for i = 1:stepsOverChord
     theta = atan(dyCdx);
     
     %UPPER SURFACE OF AIRFOIL
-    X(1) = in - yT*sin(theta); %x coordinates of upper surface
+    X(1) = initialX + in - yT*sin(theta); %x coordinates of upper surface
     X(2) = yC + yT*cos(theta); %y coordinates of upper surface
     
     %plot this point
-    plot(X(1),X(2),'+k')
+    plot(X(1),X(2),'*r')
+    axis([-0.05,0.15,-.05,.05]);
     
     %write the coordinates to the vertex file
     fprintf(vertex_fid, '%1.16e %1.16e\n', X(1), X(2));
 end
 
 %WRITE VERTICES FOR LOWER SURFACE
-for i = 1:stepsOverChord - 1
+for i = 1:((c/ds)-1)
     %determine x and y coordinates of point along lower surface
     
     in = i*ds; %position along the x axis
     
     %HALF THICKNESS OF AIRFOIL AT GIVEN POSITION ON CHORD
-    yT = 5*t*c*((0.2969*sqrt(in/c))+(-0.1260*(in/c))+(-0.3516*(in/c)^2)+(0.2843*(in/c)^3)+(-0.1015*(in/c)^4));
+    yT = 5*t*c*((0.2969*sqrt(in/c))+(-0.1260*(in/c))+(-0.3516*(in/c)^2)+(0.2843*(in/c)^3)+(-0.1036*(in/c)^4));
     
     %MEAN CAMBER LINE    
     if in <= p*c %calculating for a cambered 4-digit naca airfoil (see wikipedia page)
@@ -199,7 +209,7 @@ for i = 1:stepsOverChord - 1
     theta = atan(dyCdx);
     
     %LOWER SURFACE OF AIRFOIL
-    X(1) = in + yT*sin(theta); %x coordinates of lower surface
+    X(1) = initialX + in + yT*sin(theta); %x coordinates of lower surface
     X(2) = yC-yT*cos(theta); %y coordinates of lower surface
     
     %plot this point
