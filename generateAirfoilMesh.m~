@@ -6,7 +6,6 @@
 L = 0.1; %Length of computational domain (m) 
 FineGrid = 1024; %Number of points on finest grid
 ds = L/(FineGrid*2); %Distance between grid points on finest grid
-gridParams = [L fineGrid ds]; %Store relevant grid data here
 
 %AIRFOIL PARAMETERS
 first = 2; %NACA NUMBERS (for more info see wikipedia page on naca airfoils)
@@ -15,28 +14,6 @@ third = 1;
 fourth = 2;
 thirdFourth = 12; %last two digits
 c = 0.03; %chord length
-airfoilParams = [first second third fourth thirdFourth c ]
-
-%CONSTRUCT AIRFOIL GEOMETRY
-[X Y Ninfo] = constructGeometry(gridParams, airfoilParams);
-
-%WRITE INPUT FILES FOR IBAMR
-targetForce = 1e5;
-writeVertices(X,Y);
-writeTargets(X,targetForce);
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-L = gridParams(1); %Length of computational domain
-fineGrid = gridParams(2); %Number of pts on FINEST Eulerian grid
-ds = gridParams(3); %Distance between lag pts on finest grid
-
-first = airfoilParams(1); %NACA numbers
-second = airfoilParams(2);
-third = airfoilParams(3);
-fourth = airfoilParams(4);
-thirdFourth = airfoilParams(5);
-c = airfoilParams(6); %chord length
 
 t = thirdFourth/100.0; %max thickness of the airfoil as a fraction of the chord
 m = first/100.0; %maximum camber
@@ -54,7 +31,7 @@ fprintf(vertex_fid, '%d\n', numberNodes);
 hold on
 %remaining lines are the initial coordinates of each vertex
 
-initialX = 0;
+initialX = 0.03;
 
 %WRITE VERTICES FOR UPPER SURFACE
 for i = 0:(c/ds)
@@ -137,17 +114,17 @@ fclose(vertex_fid);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% %WRITE .TARGET FILE
-% target_fid = fopen(['naca2D_' num2str(N) '.target'], 'w');
-% 
-% fprintf(target_fid, '%d\n', numNodesTotal-1);
-% 
-% for s = 0:numNodesTotal-2
-%    
-%     fprintf(target_fid, '%d %1.16e\n', s, kappa_target*dsUpper/(dsUpper^2));
-%     
-% end
-% 
-% fclose(target_fid);
+%WRITE .TARGET FILE
+target_fid = fopen(['naca2D_' num2str(N) '.target'], 'w');
+
+fprintf(target_fid, '%d\n', numNodesTotal-1);
+
+for 
+   
+    fprintf(target_fid, '%d %1.16e\n', s, targetForce);
+    
+end
+
+fclose(target_fid);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

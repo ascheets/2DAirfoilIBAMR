@@ -114,17 +114,21 @@ fclose(vertex_fid);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% %WRITE .TARGET FILE
-% target_fid = fopen(['naca2D_' num2str(N) '.target'], 'w');
-% 
-% fprintf(target_fid, '%d\n', numNodesTotal-1);
-% 
-% for s = 0:numNodesTotal-2
-%    
-%     fprintf(target_fid, '%d %1.16e\n', s, kappa_target*dsUpper/(dsUpper^2));
-%     
-% end
-% 
-% fclose(target_fid);
+%WRITE .TARGET FILE
+
+targetForce = 1e5;
+N = 512;
+
+target_fid = fopen(['naca2D_' num2str(N) '.target'], 'w');
+
+fprintf(target_fid, '%d\n', N);
+
+for s = 0:N-1
+   
+    fprintf(target_fid, '%d %1.16e\n', s, targetForce);
+    
+end
+
+fclose(target_fid);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
