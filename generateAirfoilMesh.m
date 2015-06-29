@@ -27,7 +27,7 @@ vertex_fid = fopen(['naca2D_' num2str(N) '.vertex'], 'w');
 numberNodes = (2*(ceil(c/ds)));
 
 %first line is the number of vertices in the file
-fprintf(vertex_fid, '%d\n', numberNodes);
+fprintf(vertex_fid, '%d\n', numberNodes - 2);
 hold on
 %remaining lines are the initial coordinates of each vertex
 
@@ -117,13 +117,12 @@ fclose(vertex_fid);
 %WRITE .TARGET FILE
 
 targetForce = 1e5;
-N = 512;
 
 target_fid = fopen(['naca2D_' num2str(N) '.target'], 'w');
 
-fprintf(target_fid, '%d\n', N);
+fprintf(target_fid, '%d\n', numberNodes - 2);
 
-for s = 0:N-1
+for s = 0:numberNodes - 3
    
     fprintf(target_fid, '%d %1.16e\n', s, targetForce);
     
