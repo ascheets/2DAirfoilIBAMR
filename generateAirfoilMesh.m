@@ -4,7 +4,7 @@
 
 %GRID PARAMETERS
 L = 0.1; %Length of computational domain (m) 
-FineGrid = 1024; %Number of points on finest grid
+FineGrid = 512; %Number of points on finest grid
 ds = L/(FineGrid*2); %Distance between grid points on finest grid
 
 %AIRFOIL PARAMETERS
