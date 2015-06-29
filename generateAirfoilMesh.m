@@ -116,7 +116,7 @@ fclose(vertex_fid);
 
 %WRITE .TARGET FILE
 
-targetForce = 1e5;
+targetForce = 1.0e-2;
 
 target_fid = fopen(['naca2D_' num2str(N) '.target'], 'w');
 
