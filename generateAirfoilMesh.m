@@ -22,7 +22,7 @@ p = second/10.0; %location of the maximum camber
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %WRITE .VERTEX FILE
-vertex_fid = fopen(['naca2D_' num2str(N) '.vertex'], 'w');
+vertex_fid = fopen(['naca2D_' num2str(512) '.vertex'], 'w');
 
 numberNodes = (2*(ceil(c/ds)));
 
@@ -116,9 +116,9 @@ fclose(vertex_fid);
 
 %WRITE .TARGET FILE
 
-targetForce = 1.0e-2;
+targetForce = 1.0e2;
 
-target_fid = fopen(['naca2D_' num2str(N) '.target'], 'w');
+target_fid = fopen(['naca2D_' num2str(512) '.target'], 'w');
 
 fprintf(target_fid, '%d\n', numberNodes - 2);
 
